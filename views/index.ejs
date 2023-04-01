@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image Upload</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<style>
+    form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  #file {
+    display: none;
+  }
+
+  #file-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+    border: 2px dashed gray;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  #file-label.dragover {
+    background-color: #f1f1f1;
+  }
+
+  #file-label .icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
+
+  #file-label .text {
+    font-size: 16px;
+    color: gray;
+  }
+
+  button[type="submit"] {
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="file" id="file-label">
+          <i class="icon fas fa-cloud-upload-alt"></i>
+          <span class="text">Drag and drop files here or <span style="color: lightskyblue;">browse </span></span>
+        </label>
+        <input type="file" name="files" id="file" multiple>
+        <button type="submit">Upload</button>
+      </form>
+      
+      <script>
+        const fileInput = document.getElementById('file');
+        const fileLabel = document.getElementById('file-label');
+      
+        fileInput.addEventListener('change', function() {
+          if (fileInput.files.length === 0) {
+            fileLabel.querySelector('.text').textContent = 'Drag and drop files here or click to select files';
+          } else if (fileInput.files.length === 1) {
+            fileLabel.querySelector('.text').textContent = `Selected file: ${fileInput.files[0].name}`;
+          } else {
+            fileLabel.querySelector('.text').textContent = `${fileInput.files.length} files selected`;
+          }
+        });
+      
+        fileLabel.addEventListener('dragenter', function() {
+          fileLabel.classList.add('dragover');
+        });
+      
+        fileLabel.addEventListener('dragleave', function() {
+          fileLabel.classList.remove('dragover');
+        });
+      
+        fileLabel.addEventListener('drop', function(event) {
+          event.preventDefault();
+          fileLabel.classList.remove('dragover');
+      
+          if (event.dataTransfer.files.length === 0) {
+            fileLabel.querySelector('.text').textContent = 'Drag and drop files here or click to select files';
+          } else if (event.dataTransfer.files.length === 1) {
+            fileLabel.querySelector('.text').textContent = `Selected file: ${event.dataTransfer.files[0].name}`;
+          } else {
+            fileLabel.querySelector('.text').textContent = `${event.dataTransfer.files.length} files selected`;
+          }
+      
+          fileInput.files = event.dataTransfer.files;
+        });
+      
+        fileLabel.addEventListener('dragover', function(event) {
+          event.preventDefault();
+        });
+      </script>
+      
+</body>
+</html>
